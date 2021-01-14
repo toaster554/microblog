@@ -39,6 +39,8 @@ env
 venv
 app.db
 microblog.log*
+.env
+.flaskenv
 
 # Elasticsearch
 elasticsearch-7.10.1
