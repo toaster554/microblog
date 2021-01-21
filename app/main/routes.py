@@ -95,7 +95,7 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash(_('Your changes have been saved.'))
+        flash(_('Your changes have been saved.'), 'success')
         return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -111,14 +111,16 @@ def follow(username):
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
-            flash(_('User %(username)s not found.', username=username))
+            flash(_('User %(username)s not found.', username=username),
+                  'warning')
             return redirect(url_for('main.index'))
         if user == current_user:
-            flash(_('You cannot follow yourself!'))
+            flash(_('You cannot follow yourself!'), 'warning')
             return redirect(url_for('main.user', username=username))
         current_user.follow(user)
         db.session.commit()
-        flash(_('You are following %(username)s!', username=username))
+        flash(_('You are following %(username)s!', username=username),
+              'success')
         return redirect(url_for('main.user', username=username))
     else:
         return redirect(url_for('main.index'))
@@ -131,14 +133,16 @@ def unfollow(username):
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
-            flash(_('User %(username)s not found.', username=username))
+            flash(_('User %(username)s not found.', username=username),
+                  'warning')
             return redirect(url_for('main.index'))
         if user == current_user:
-            flash(_('You cannot unfollow yourself!'))
+            flash(_('You cannot unfollow yourself!'), 'warning')
             return redirect(url_for('main.user', username=username))
         current_user.unfollow(user)
         db.session.commit()
-        flash(_('You are not following %(username)s.', username=username))
+        flash(_('You are not following %(username)s.', username=username),
+              'info')
         return redirect(url_for('main.user', username=username))
     else:
         return redirect(url_for('main.index'))
@@ -179,7 +183,7 @@ def send_message(recipient):
         db.session.add(msg)
         user.add_notification('unread_message_count', user.new_messages())
         db.session.commit()
-        flash(_('Your message has been sent.'))
+        flash(_('Your message has been sent.'), 'success')
         return redirect(url_for('main.user', username=recipient))
     return render_template('send_message.html', title=_('Send Message'),
                            form=form, recipient=recipient)
