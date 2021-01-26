@@ -21,6 +21,13 @@
                     username=user_link, when=moment(post.timestamp).fromNow()) }}
                 <br>
                 <span id="post{{ post.id }}">{{ post.body }}</span>
+                {% if current_user.username == post.author.username %}
+                <br><br>
+                <form action="{{ url_for('main.delete_post', id=post.id) }}" method="post">
+                    {{ empty_form.hidden_tag() }}
+                    {{ empty_form.submit(value=_('Delete post'), class_='btn btn-default') }}
+                </form>
+                {% endif %}
                 {% if post.language and post.language != g.locale %}
                 <br><br>
                 <span id="translation{{ post.id }}">
